@@ -81,19 +81,22 @@ export default function ContestCard({ contest }: ContestCardProps) {
     toast.success(`You're now notified for "${contest.name}"`);
     setIsNotified(true);
 
-    const contestDateTime = new Date(contest.startTime);
-    const formattedContestDate = contestDateTime.toLocaleString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+const contestDateTime = new Date(contest.startTime + "Z");
+const formattedContestDate = contestDateTime.toLocaleString("en-US", {
+  timeZone: "Asia/Kolkata",
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
 
-    const formattedContestTime = contestDateTime.toLocaleString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h12",
-    });
+const formattedContestTime = contestDateTime.toLocaleString("en-US", {
+  timeZone: "Asia/Kolkata",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h12",
+});
+
 
     try {
       const response = await fetch("/api/notifications", {
@@ -160,15 +163,16 @@ export default function ContestCard({ contest }: ContestCardProps) {
   }, []);
 
   const formattedStartTimeForDisplay = useMemo(() => {
-    const date = new Date(contest.startTime);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      hourCycle: "h12",
-      minute: "2-digit",
-    });
-  }, [contest.startTime]);
+  const date = new Date(contest.startTime + "Z");
+  return date.toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    hourCycle: "h12",
+    minute: "2-digit",
+  });
+}, [contest.startTime]);
 
   const shouldDisableButton = useMemo(() => {
     const isContestNotUpcoming =
