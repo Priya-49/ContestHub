@@ -1,11 +1,11 @@
-require('dotenv/config');
-const mongoose = require('mongoose');
-const { render } = require('@react-email/render');
-const { Resend } = require('resend');
+import 'dotenv/config';
+import mongoose from 'mongoose';
+import { render } from '@react-email/render';
+import { Resend } from 'resend';
 
-const { connectDB } = require('../lib/db');
-const Notification = require('../lib/models/notification');
-const ReminderEmail = require('../emails/RemainderEmail');
+import { connectDB } from '../lib/db';
+import Notification from '../lib/models/notification';
+import ReminderEmail from '@/emails/RemainderEmail';
 
 if (!process.env.RESEND_API_KEY) {
   console.error("❌ RESEND_API_KEY is missing in environment variables.");
@@ -14,7 +14,14 @@ if (!process.env.RESEND_API_KEY) {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-async function sendReminderEmail(toEmail, contestName, contestDate, contestTime, notifyBefore, contestUrl) {
+async function sendReminderEmail(
+  toEmail: string,
+  contestName: string,
+  contestDate: string,
+  contestTime: string,
+  notifyBefore: string,
+  contestUrl: string
+) {
   const html = await render(
     ReminderEmail({
       contestName,
@@ -23,7 +30,7 @@ async function sendReminderEmail(toEmail, contestName, contestDate, contestTime,
       notifyBefore,
       contestUrl,
     })
-  );
+  ) as string;
 
   try {
     await resend.emails.send({
@@ -39,7 +46,7 @@ async function sendReminderEmail(toEmail, contestName, contestDate, contestTime,
   }
 }
 
-async function checkAndSendReminders() {
+export async function checkAndSendReminders() {
   console.log(`🔄 [Reminder Script] Starting check at ${new Date().toISOString()}`);
   await connectDB();
 
@@ -56,13 +63,16 @@ async function checkAndSendReminders() {
         continue;
       }
 
+      // Parse notifyBefore (e.g., "15m", "2h")
       let reminderOffsetMs = 0;
       const match = notification.notifyBefore.match(/(\d+)([mh])/);
 
       if (match) {
         const value = parseInt(match[1]);
         const unit = match[2];
-        reminderOffsetMs = unit === "h" ? value * 60 * 60 * 1000 : value * 60 * 1000;
+        reminderOffsetMs = unit === "h"
+          ? value * 60 * 60 * 1000
+          : value * 60 * 1000;
       } else {
         console.warn(`⚠️ Invalid notifyBefore format for ID ${notification._id}. Defaulting to 1 hour.`);
         reminderOffsetMs = 1 * 60 * 60 * 1000;
@@ -100,6 +110,3 @@ async function checkAndSendReminders() {
     console.log(`🏁 Finished reminder check at ${new Date().toISOString()}`);
   }
 }
-
-module.expor
-
