@@ -7,7 +7,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "cron": "ts-node jobs/cron-runner.ts",
+    "cron": "ts-node --loader ts-node/esm jobs/cron-runner.ts",
     "lint": "next lint"
   },
   "dependencies": {

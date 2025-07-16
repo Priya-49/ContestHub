@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
+    "target": "ES2020",
     "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "moduleResolution": "node",
+    "allowJs": false,
+    "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
     "jsx": "preserve",
     "incremental": true,
     "plugins": [
@@ -20,11 +20,19 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["jobs/**/*.ts",
-   "scripts/**/*.ts",
+  "ts-node": {
+    "transpileOnly": true,
+    "esm": true
+  },
+  "include": [
+    "jobs/**/*.ts",
+    "scripts/**/*.ts",
+    "emails/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"],
+    "**/*.tsx"
+  ],
   "exclude": ["node_modules"]
 }
+
 
 
